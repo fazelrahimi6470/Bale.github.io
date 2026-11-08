@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ربات شبیه ساز زندگی</title>
-    <!-- فونت زیبای وزیرمتن -->
     <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.0.3/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
-    
     <style>
         body {
             font-family: 'Vazirmatn', sans-serif;
@@ -19,7 +17,6 @@
             align-items: center;
             min-height: 100vh;
         }
-
         .container {
             background-color: rgba(30, 41, 59, 0.8);
             backdrop-filter: blur(10px);
@@ -31,20 +28,23 @@
             text-align: center;
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
-
         h1 {
             font-size: 1.4rem;
-            margin-bottom: 25px;
+            margin-bottom: 10px;
             color: #38bdf8;
             line-height: 1.6;
         }
-
+        .welcome-user {
+            font-size: 1.1rem;
+            color: #cbd5e1;
+            margin-bottom: 25px;
+            min-height: 25px; 
+        }
         .btn-group {
             display: flex;
             flex-direction: column;
             gap: 12px;
         }
-
         .btn {
             display: flex;
             justify-content: space-between;
@@ -57,69 +57,67 @@
             color: white;
             transition: transform 0.2s, opacity 0.2s;
         }
-
-        .btn:hover {
-            transform: translateY(-2px);
-            opacity: 0.9;
-        }
-
-        /* رنگ‌بندی اختصاصی برای هر دکمه */
+        .btn:hover { transform: translateY(-2px); opacity: 0.9; }
         .btn-robot { background: linear-gradient(45deg, #2563eb, #3b82f6); }
         .btn-channel { background: linear-gradient(45deg, #0284c7, #0ea5e9); }
         .btn-events { background: linear-gradient(45deg, #059669, #10b981); }
         .btn-group-link { background: linear-gradient(45deg, #7c3aed, #8b5cf6); }
         .btn-creator { background: linear-gradient(45deg, #ea580c, #f97316); }
-
-        .btn span.icon {
-            font-size: 1.2rem;
-            margin-left: 10px;
-        }
-        
-        .btn span.url {
-            font-size: 0.8rem;
-            opacity: 0.7;
-            direction: ltr;
-            font-family: sans-serif;
-        }
+        .btn span.url { font-size: 0.8rem; opacity: 0.7; direction: ltr; font-family: sans-serif; }
     </style>
 </head>
 <body>
 
     <div class="container">
         <h1>به ربات شبیه ساز زندگی خوش آمدید 🌟</h1>
+        <div class="welcome-user" id="user-greeting"></div>
 
         <div class="btn-group">
-            <!-- دکمه ربات -->
             <a href="https://ble.ir/Shabihsaz_zendegi_bot" class="btn btn-robot" target="_blank">
                 <span>ورود به ربات</span>
                 <span class="url">@Shabihsaz_zendegi_bot</span>
             </a>
-
-            <!-- دکمه کانال اصلی -->
             <a href="https://ble.ir/channel_Shabihsaz_zendegi" class="btn btn-channel" target="_blank">
                 <span>کانال اصلی</span>
                 <span class="url">@channel_Shabihsaz_zendegi</span>
             </a>
-
-            <!-- دکمه کانال رویداد -->
             <a href="https://ble.ir/Activities_zendegi" class="btn btn-events" target="_blank">
                 <span>کانال رویدادها</span>
                 <span class="url">@Activities_zendegi</span>
             </a>
-
-            <!-- دکمه گروه -->
             <a href="https://ble.ir/Group_shabihsaz_zendegi" class="btn btn-group-link" target="_blank">
                 <span>گروه گفتگو</span>
                 <span class="url">@Group_shabihsaz_zendegi</span>
             </a>
-
-            <!-- دکمه سازنده -->
             <a href="https://ble.ir/fazellrahimii" class="btn btn-creator" target="_blank">
                 <span>ارتباط با سازنده</span>
                 <span class="url">@fazellrahimii</span>
             </a>
         </div>
     </div>
+
+    <!-- ۱. اسکریپت SDK بله -->
+    <script src="https://tapi.bale.ai/miniapp.js"></script>
+
+    <!-- ۲. اسکریپت دریافت نام کاربر -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const greetingElement = document.getElementById('user-greeting');
+            
+            // بررسی می‌کنیم که آیا SDK بله بارگذاری شده است یا خیر
+            if (window.Bale && window.Bale.WebApp && window.Bale.WebApp.initDataUnsafe) {
+                const user = window.Bale.WebApp.initDataUnsafe.user;
+                if (user && user.first_name) {
+                    greetingElement.textContent = `سلام ${user.first_name} عزیز! 👋`;
+                } else {
+                    greetingElement.textContent = 'سلام! 👋';
+                }
+            } else {
+                // این حالت زمانی رخ می‌دهد که سایت در مرورگر معمولی (خارج از بله) باز شود
+                greetingElement.textContent = 'برای مشاهده نام خود، این صفحه را از داخل بله باز کنید.';
+            }
+        });
+    </script>
 
 </body>
 </html>
