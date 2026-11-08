@@ -28,17 +28,37 @@
             text-align: center;
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        h1 {
-            font-size: 1.4rem;
-            margin-bottom: 10px;
-            color: #38bdf8;
-            line-height: 1.6;
+        
+        /* استایل بخش خوش‌آمدگویی که حالا بالای عنوان است */
+        .welcome-box {
+            background-color: rgba(56, 189, 248, 0.1);
+            border: 1px dashed #38bdf8;
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
         }
         .welcome-user {
             font-size: 1.1rem;
-            color: #cbd5e1;
+            font-weight: bold;
+            color: #38bdf8;
+            margin: 0;
+        }
+        .user-id {
+            font-size: 0.85rem;
+            color: #94a3b8;
+            font-family: sans-serif;
+            direction: ltr; /* برای نمایش درست اعداد و آیدی */
+        }
+
+        h1 {
+            font-size: 1.3rem;
             margin-bottom: 25px;
-            min-height: 25px; 
+            margin-top: 0;
+            color: #f8fafc;
+            line-height: 1.6;
         }
         .btn-group {
             display: flex;
@@ -69,8 +89,14 @@
 <body>
 
     <div class="container">
+        <!-- بخش خوش‌آمدگویی و آیدی (منتقل شده به بالا) -->
+        <div class="welcome-box">
+            <div class="welcome-user" id="user-greeting">در حال دریافت اطلاعات...</div>
+            <div class="user-id" id="user-id-display"></div>
+        </div>
+
+        <!-- عنوان اصلی -->
         <h1>به ربات شبیه ساز زندگی خوش آمدید 🌟</h1>
-        <div class="welcome-user" id="user-greeting"></div>
 
         <div class="btn-group">
             <a href="https://ble.ir/Shabihsaz_zendegi_bot" class="btn btn-robot" target="_blank">
@@ -99,22 +125,35 @@
     <!-- ۱. اسکریپت SDK بله -->
     <script src="https://tapi.bale.ai/miniapp.js"></script>
 
-    <!-- ۲. اسکریپت دریافت نام کاربر -->
+    <!-- ۲. اسکریپت دریافت نام و آیدی کاربر -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const greetingElement = document.getElementById('user-greeting');
+            const idElement = document.getElementById('user-id-display');
             
             // بررسی می‌کنیم که آیا SDK بله بارگذاری شده است یا خیر
             if (window.Bale && window.Bale.WebApp && window.Bale.WebApp.initDataUnsafe) {
                 const user = window.Bale.WebApp.initDataUnsafe.user;
-                if (user && user.first_name) {
-                    greetingElement.textContent = `سلام ${user.first_name} عزیز! 👋`;
+                
+                if (user) {
+                    // نمایش نام
+                    if (user.first_name) {
+                        greetingElement.textContent = `سلام ${user.first_name} عزیز! 👋`;
+                    } else {
+                        greetingElement.textContent = 'سلام! 👋';
+                    }
+                    
+                    // نمایش آیدی عددی
+                    if (user.id) {
+                        idElement.textContent = `شناسه عددی شما: ${user.id}`;
+                    }
                 } else {
                     greetingElement.textContent = 'سلام! 👋';
                 }
             } else {
-                // این حالت زمانی رخ می‌دهد که سایت در مرورگر معمولی (خارج از بله) باز شود
-                greetingElement.textContent = 'برای مشاهده نام خود، این صفحه را از داخل بله باز کنید.';
+                // حالت تست در مرورگر
+                greetingElement.textContent = 'سلام کاربر عزیز! 👋';
+                idElement.textContent = '(در حال اجرا در مرورگر - آیدی درون بله نمایش داده می‌شود)';
             }
         });
     </script>
