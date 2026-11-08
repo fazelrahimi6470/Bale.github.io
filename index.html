@@ -1,162 +1,401 @@
+
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ربات شبیه ساز زندگی</title>
-    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.0.3/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
-    <style>
-        body {
-            font-family: 'Vazirmatn', sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            color: #f8fafc;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-        .container {
-            background-color: rgba(30, 41, 59, 0.8);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            padding: 30px 20px;
-            width: 90%;
-            max-width: 400px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        
-        /* استایل بخش خوش‌آمدگویی که حالا بالای عنوان است */
-        .welcome-box {
-            background-color: rgba(56, 189, 248, 0.1);
-            border: 1px dashed #38bdf8;
-            border-radius: 12px;
-            padding: 12px;
-            margin-bottom: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-        .welcome-user {
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: #38bdf8;
-            margin: 0;
-        }
-        .user-id {
-            font-size: 0.85rem;
-            color: #94a3b8;
-            font-family: sans-serif;
-            direction: ltr; /* برای نمایش درست اعداد و آیدی */
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080d1c">
+<title>ربات شبیه‌ساز زندگی</title>
 
-        h1 {
-            font-size: 1.3rem;
-            margin-bottom: 25px;
-            margin-top: 0;
-            color: #f8fafc;
-            line-height: 1.6;
-        }
-        .btn-group {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .btn {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 14px 20px;
-            border-radius: 12px;
-            text-decoration: none;
-            font-size: 1rem;
-            font-weight: bold;
-            color: white;
-            transition: transform 0.2s, opacity 0.2s;
-        }
-        .btn:hover { transform: translateY(-2px); opacity: 0.9; }
-        .btn-robot { background: linear-gradient(45deg, #2563eb, #3b82f6); }
-        .btn-channel { background: linear-gradient(45deg, #0284c7, #0ea5e9); }
-        .btn-events { background: linear-gradient(45deg, #059669, #10b981); }
-        .btn-group-link { background: linear-gradient(45deg, #7c3aed, #8b5cf6); }
-        .btn-creator { background: linear-gradient(45deg, #ea580c, #f97316); }
-        .btn span.url { font-size: 0.8rem; opacity: 0.7; direction: ltr; font-family: sans-serif; }
-    </style>
+<link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.0.3/Vazirmatn-font-face.css" rel="stylesheet">
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    padding: 25px 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Vazirmatn', sans-serif;
+    color: #fff;
+    background:
+        radial-gradient(circle at 15% 15%, #123b69 0, transparent 35%),
+        radial-gradient(circle at 85% 85%, #3b1769 0, transparent 35%),
+        #080d1c;
+    overflow-x: hidden;
+}
+
+/* نورهای پس‌زمینه */
+body::before,
+body::after {
+    content: "";
+    position: fixed;
+    width: 230px;
+    height: 230px;
+    border-radius: 50%;
+    filter: blur(90px);
+    opacity: .35;
+    z-index: -1;
+    animation: float 8s ease-in-out infinite alternate;
+}
+
+body::before {
+    background: #0ea5e9;
+    top: 5%;
+    right: -90px;
+}
+
+body::after {
+    background: #9333ea;
+    bottom: 5%;
+    left: -90px;
+    animation-delay: 2s;
+}
+
+@keyframes float {
+    from { transform: translateY(-20px); }
+    to { transform: translateY(35px); }
+}
+
+.container {
+    width: 100%;
+    max-width: 430px;
+    padding: 25px 20px;
+    border-radius: 26px;
+    background: rgba(15, 23, 42, .78);
+    border: 1px solid rgba(148, 163, 184, .2);
+    box-shadow: 0 20px 70px rgba(0,0,0,.45);
+    backdrop-filter: blur(18px);
+    animation: appear .8s ease both;
+}
+
+@keyframes appear {
+    from {
+        opacity: 0;
+        transform: translateY(25px) scale(.97);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.logo {
+    width: 82px;
+    height: 82px;
+    margin: 0 auto 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px;
+    border-radius: 25px;
+    background: linear-gradient(135deg, #2563eb, #9333ea);
+    box-shadow: 0 0 35px rgba(59,130,246,.4);
+    animation: pulse 3s infinite;
+}
+
+@keyframes pulse {
+    50% { box-shadow: 0 0 45px rgba(147,51,234,.65); }
+}
+
+h1 {
+    margin: 0;
+    font-size: 23px;
+    font-weight: 900;
+    text-align: center;
+    background: linear-gradient(90deg, #38bdf8, #c084fc);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.subtitle {
+    text-align: center;
+    color: #94a3b8;
+    font-size: 12px;
+    margin: 8px 0 22px;
+}
+
+/* اطلاعات کاربر */
+.welcome-box {
+    padding: 15px;
+    margin-bottom: 22px;
+    border-radius: 17px;
+    background: linear-gradient(120deg, rgba(14,165,233,.13), rgba(139,92,246,.13));
+    border: 1px solid rgba(56,189,248,.3);
+    text-align: center;
+}
+
+.welcome-user {
+    color: #7dd3fc;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.user-id {
+    color: #94a3b8;
+    font-size: 11px;
+    margin-top: 6px;
+    direction: ltr;
+    font-family: sans-serif;
+}
+
+/* عنوان لینک‌ها */
+.section-title {
+    color: #cbd5e1;
+    font-size: 13px;
+    font-weight: bold;
+    margin: 0 4px 12px;
+    text-align: right;
+}
+
+.btn-group {
+    display: flex;
+    flex-direction: column;
+    gap: 11px;
+}
+
+.btn {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 14px 15px;
+    border-radius: 15px;
+    color: white;
+    text-decoration: none;
+    border: 1px solid rgba(255,255,255,.12);
+    transition: .25s ease;
+}
+
+.btn::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -120%;
+    width: 70%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,.16), transparent);
+    transform: skewX(-20deg);
+    transition: .6s;
+}
+
+.btn:hover::before {
+    left: 140%;
+}
+
+.btn:hover {
+    transform: translateY(-3px);
+    filter: brightness(1.15);
+    box-shadow: 0 8px 25px rgba(0,0,0,.25);
+}
+
+.btn:active {
+    transform: scale(.97);
+}
+
+.btn-content {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    z-index: 1;
+}
+
+.btn-icon {
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 19px;
+    border-radius: 12px;
+    background: rgba(255,255,255,.15);
+}
+
+.btn-text {
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.btn-url {
+    direction: ltr;
+    font-family: sans-serif;
+    font-size: 9px;
+    opacity: .75;
+    z-index: 1;
+    text-align: left;
+    overflow-wrap: anywhere;
+}
+
+.btn-robot {
+    background: linear-gradient(110deg, #1d4ed8, #2563eb);
+}
+
+.btn-channel {
+    background: linear-gradient(110deg, #0369a1, #0284c7);
+}
+
+.btn-events {
+    background: linear-gradient(110deg, #047857, #059669);
+}
+
+.btn-group-link {
+    background: linear-gradient(110deg, #6d28d9, #7c3aed);
+}
+
+.btn-creator {
+    background: linear-gradient(110deg, #c2410c, #ea580c);
+}
+
+.footer {
+    text-align: center;
+    margin-top: 22px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255,255,255,.08);
+    color: #64748b;
+    font-size: 10px;
+}
+
+.footer span {
+    color: #38bdf8;
+}
+
+@media (max-width: 360px) {
+    .btn-url {
+        font-size: 8px;
+    }
+
+    .container {
+        padding: 20px 14px;
+    }
+}
+</style>
 </head>
+
 <body>
 
-    <div class="container">
-        <!-- بخش خوش‌آمدگویی و آیدی (منتقل شده به بالا) -->
-        <div class="welcome-box">
-            <div class="welcome-user" id="user-greeting">در حال دریافت اطلاعات...</div>
-            <div class="user-id" id="user-id-display"></div>
-        </div>
+<div class="container">
 
-        <!-- عنوان اصلی -->
-        <h1>به ربات شبیه ساز زندگی خوش آمدید 🌟</h1>
+    <div class="logo">🎮</div>
 
-        <div class="btn-group">
-            <a href="https://ble.ir/Shabihsaz_zendegi_bot" class="btn btn-robot" target="_blank">
-                <span>ورود به ربات</span>
-                <span class="url">@Shabihsaz_zendegi_bot</span>
-            </a>
-            <a href="https://ble.ir/channel_Shabihsaz_zendegi" class="btn btn-channel" target="_blank">
-                <span>کانال اصلی</span>
-                <span class="url">@channel_Shabihsaz_zendegi</span>
-            </a>
-            <a href="https://ble.ir/Activities_zendegi" class="btn btn-events" target="_blank">
-                <span>کانال رویدادها</span>
-                <span class="url">@Activities_zendegi</span>
-            </a>
-            <a href="https://ble.ir/Group_shabihsaz_zendegi" class="btn btn-group-link" target="_blank">
-                <span>گروه گفتگو</span>
-                <span class="url">@Group_shabihsaz_zendegi</span>
-            </a>
-            <a href="https://ble.ir/fazellrahimii" class="btn btn-creator" target="_blank">
-                <span>ارتباط با سازنده</span>
-                <span class="url">@fazellrahimii</span>
-            </a>
-        </div>
+    <h1>شبیه‌ساز زندگی</h1>
+    <div class="subtitle">
+        دنیایی متفاوت از سرگرمی، رقابت و هیجان ✨
     </div>
 
-    <!-- ۱. اسکریپت SDK بله -->
-    <script src="https://tapi.bale.ai/miniapp.js"></script>
+    <div class="welcome-box">
+        <div class="welcome-user" id="user-greeting">
+            در حال دریافت اطلاعات...
+        </div>
+        <div class="user-id" id="user-id-display"></div>
+    </div>
 
-    <!-- ۲. اسکریپت دریافت نام و آیدی کاربر -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const greetingElement = document.getElementById('user-greeting');
-            const idElement = document.getElementById('user-id-display');
-            
-            // بررسی می‌کنیم که آیا SDK بله بارگذاری شده است یا خیر
-            if (window.Bale && window.Bale.WebApp && window.Bale.WebApp.initDataUnsafe) {
-                const user = window.Bale.WebApp.initDataUnsafe.user;
-                
-                if (user) {
-                    // نمایش نام
-                    if (user.first_name) {
-                        greetingElement.textContent = `سلام ${user.first_name} عزیز! 👋`;
-                    } else {
-                        greetingElement.textContent = 'سلام! 👋';
-                    }
-                    
-                    // نمایش آیدی عددی
-                    if (user.id) {
-                        idElement.textContent = `شناسه عددی شما: ${user.id}`;
-                    }
-                } else {
-                    greetingElement.textContent = 'سلام! 👋';
+    <div class="section-title">🚀 دسترسی سریع</div>
+
+    <div class="btn-group">
+
+        <a href="https://ble.ir/Shabihsaz_zendegi_bot"
+           class="btn btn-robot" target="_blank" rel="noopener">
+            <div class="btn-content">
+                <div class="btn-icon">🎮</div>
+                <div class="btn-text">ورود به ربات</div>
+            </div>
+            <span class="btn-url">@Shabihsaz_zendegi_bot</span>
+        </a>
+
+        <a href="https://ble.ir/channel_Shabihsaz_zendegi"
+           class="btn btn-channel" target="_blank" rel="noopener">
+            <div class="btn-content">
+                <div class="btn-icon">📢</div>
+                <div class="btn-text">کانال اصلی</div>
+            </div>
+            <span class="btn-url">@channel_Shabihsaz_zendegi</span>
+        </a>
+
+        <a href="https://ble.ir/Activities_zendegi"
+           class="btn btn-events" target="_blank" rel="noopener">
+            <div class="btn-content">
+                <div class="btn-icon">🏆</div>
+                <div class="btn-text">کانال رویدادها</div>
+            </div>
+            <span class="btn-url">@Activities_zendegi</span>
+        </a>
+
+        <a href="https://ble.ir/Group_shabihsaz_zendegi"
+           class="btn btn-group-link" target="_blank" rel="noopener">
+            <div class="btn-content">
+                <div class="btn-icon">👥</div>
+                <div class="btn-text">گروه گفتگو</div>
+            </div>
+            <span class="btn-url">@Group_shabihsaz_zendegi</span>
+        </a>
+
+        <a href="https://ble.ir/fazellrahimii"
+           class="btn btn-creator" target="_blank" rel="noopener">
+            <div class="btn-content">
+                <div class="btn-icon">👨‍💻</div>
+                <div class="btn-text">ارتباط با سازنده</div>
+            </div>
+            <span class="btn-url">@fazellrahimii</span>
+        </a>
+
+    </div>
+
+    <div class="footer">
+        ساخته شده با ❤️ برای <span>شبیه‌ساز زندگی</span>
+    </div>
+
+</div>
+
+<script src="https://tapi.bale.ai/miniapp.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+
+    const greetingElement = document.getElementById('user-greeting');
+    const idElement = document.getElementById('user-id-display');
+
+    try {
+        if (
+            window.Bale &&
+            window.Bale.WebApp &&
+            window.Bale.WebApp.initDataUnsafe
+        ) {
+            const user = window.Bale.WebApp.initDataUnsafe.user;
+
+            if (user) {
+                greetingElement.textContent = user.first_name
+                    ? `سلام ${user.first_name} عزیز! 👋`
+                    : 'سلام! 👋';
+
+                if (user.id) {
+                    idElement.textContent =
+                        `شناسه عددی شما: ${user.id}`;
                 }
             } else {
-                // حالت تست در مرورگر
-                greetingElement.textContent = 'سلام کاربر عزیز! 👋';
-                idElement.textContent = '(در حال اجرا در مرورگر - آیدی درون بله نمایش داده می‌شود)';
+                greetingElement.textContent = 'سلام! 👋';
             }
-        });
-    </script>
+        } else {
+            greetingElement.textContent = 'سلام کاربر عزیز! 👋';
+            idElement.textContent =
+                '(برای مشاهده اطلاعات کاربری، مینی‌اپ را در بله باز کنید)';
+        }
+    } catch (error) {
+        greetingElement.textContent = 'سلام کاربر عزیز! 👋';
+        idElement.textContent = '';
+        console.error('Bale Mini App Error:', error);
+    }
+
+});
+</script>
 
 </body>
 </html>
