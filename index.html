@@ -5,957 +5,140 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#080b22">
 <title>شبیه‌ساز زندگی | Life Simulator</title>
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-
 <script src="https://tapi.bale.ai/miniapp.js"></script>
-
 <style>
-:root {
-    --bg: #080b22;
-    --cyan: #56e6ff;
-    --purple: #a78bfa;
-    --muted: #aab4dc;
-}
-
-* {
-    box-sizing: border-box;
-}
-
-html {
-    min-height: 100%;
-    background: var(--bg);
-}
-
-body {
-    margin: 0;
-    min-height: 100vh;
-    color: #fff;
-    font-family: "Vazirmatn", Tahoma, sans-serif;
-    background:
-        radial-gradient(ellipse at 12% 8%, rgba(76,64,190,.34), transparent 34%),
-        radial-gradient(ellipse at 90% 24%, rgba(0,185,218,.2), transparent 30%),
-        linear-gradient(145deg,#080b22,#11143a 52%,#090d27);
-    overflow-x: hidden;
-}
-
-body::before,
-body::after {
-    content: "";
-    position: fixed;
-    inset: -30%;
-    pointer-events: none;
-    z-index: 0;
-    background: conic-gradient(
-        from 0deg,
-        transparent,
-        rgba(83,225,255,.07),
-        transparent,
-        rgba(167,139,250,.08),
-        transparent
-    );
-    animation: nebula 28s linear infinite;
-}
-
-body::after {
-    animation-duration: 42s;
-    animation-direction: reverse;
-    filter: blur(34px);
-}
-
-@keyframes nebula {
-    to {
-        transform: rotate(360deg) scale(1.1);
-    }
-}
-
-#stars {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 0;
-    overflow: hidden;
-}
-
-.star {
-    position: absolute;
-    width: 3px;
-    height: 3px;
-    border-radius: 50%;
-    background: #d8faff;
-    box-shadow: 0 0 10px 2px #72dfff;
-    opacity: .5;
-    animation: twinkle var(--t) ease-in-out infinite alternate;
-}
-
-@keyframes twinkle {
-    to {
-        opacity: .08;
-        transform: scale(.45);
-    }
-}
-
-.wrap {
-    position: relative;
-    z-index: 1;
-    width: min(100% - 28px, 510px);
-    margin: 0 auto;
-    padding: calc(26px + env(safe-area-inset-top)) 0 calc(28px + env(safe-area-inset-bottom));
-}
-
-.topline {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.brand-mini {
-    font-size: 12px;
-    letter-spacing: 1.4px;
-    color: #b6c4ef;
-    font-weight: 800;
-}
-
-.live {
-    display: flex;
-    align-items: center;
-    gap: 7px;
-    border: 1px solid rgba(82,255,187,.24);
-    background: rgba(42,220,145,.08);
-    padding: 6px 11px;
-    border-radius: 30px;
-    color: #8affc7;
-    font-size: 11px;
-}
-
-.live i {
-    width: 7px;
-    height: 7px;
-    background: #55f4a7;
-    border-radius: 50%;
-    box-shadow: 0 0 12px #55f4a7;
-    animation: pulse 1.4s infinite;
-}
-
-@keyframes pulse {
-    50% {
-        opacity: .35;
-        box-shadow: 0 0 2px #55f4a7;
-    }
-}
-
-/* لوگوی اصلی */
-
-.hero {
-    text-align: center;
-    position: relative;
-    padding: 12px 0 24px;
-}
-
-.orbit {
-    position: absolute;
-    width: 290px;
-    height: 290px;
-    border: 1px solid rgba(107,220,255,.15);
-    border-radius: 50%;
-    top: 22px;
-    left: 50%;
-    transform: translateX(-50%);
-    animation: orbit 18s linear infinite;
-}
-
-.orbit::before,
-.orbit::after {
-    content: "";
-    position: absolute;
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
-    background: var(--cyan);
-    box-shadow: 0 0 18px var(--cyan);
-    top: 35px;
-    left: 24px;
-}
-
-.orbit::after {
-    width: 6px;
-    height: 6px;
-    background: #ffd76a;
-    box-shadow: 0 0 16px #ffd76a;
-    top: auto;
-    left: auto;
-    right: 10px;
-    bottom: 68px;
-}
-
-@keyframes orbit {
-    to {
-        transform: translateX(-50%) rotate(360deg);
-    }
-}
-
-.logo-wrap {
-    width: 150px;
-    height: 150px;
-    margin: 0 auto 18px;
-    position: relative;
-    display: grid;
-    place-items: center;
-}
-
-.logo-halo {
-    position: absolute;
-    inset: 9px;
-    border-radius: 38px;
-    background: linear-gradient(
-        135deg,
-        rgba(86,230,255,.23),
-        rgba(167,139,250,.23)
-    );
-    filter: blur(18px);
-    animation: halo 3s ease-in-out infinite alternate;
-}
-
-@keyframes halo {
-    to {
-        transform: scale(1.18);
-        opacity: .65;
-    }
-}
-
-.logo {
-    width: 116px;
-    height: 116px;
-    display: grid;
-    place-items: center;
-    border-radius: 34px;
-    background: linear-gradient(145deg,rgba(42,57,119,.9),rgba(16,23,62,.95));
-    border: 1px solid rgba(170,220,255,.34);
-    box-shadow:
-        inset 0 1px 1px rgba(255,255,255,.25),
-        0 18px 50px rgba(0,0,0,.42),
-        0 0 34px rgba(74,207,255,.2);
-    position: relative;
-    animation: levitate 4s ease-in-out infinite;
-    overflow: hidden;
-}
-
-.logo img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    padding: 3px;
-    display: block;
-}
-
-.logo::after {
-    content: "";
-    position: absolute;
-    inset: -8px;
-    border: 1px solid rgba(108,225,255,.25);
-    border-radius: 39px;
-    transform: rotate(12deg);
-    pointer-events: none;
-}
-
-@keyframes levitate {
-    50% {
-        transform: translateY(-9px) rotate(2deg);
-    }
-}
-
-h1 {
-    font-size: clamp(27px,7vw,36px);
-    font-weight: 900;
-    margin: 0;
-    line-height: 1.5;
-    background: linear-gradient(90deg,#fff 5%,#8beaff 45%,#c3a9ff 85%,#fff);
-    background-size: 220% auto;
-    color: transparent;
-    background-clip: text;
-    -webkit-background-clip: text;
-    animation: shine 5s linear infinite;
-}
-
-@keyframes shine {
-    to {
-        background-position: 220% center;
-    }
-}
-
-.subtitle {
-    margin: 5px 0 0;
-    color: #b9c5ed;
-    font-size: 13px;
-}
-
-/* کارت اصلی */
-
-.card {
-    position: relative;
-    overflow: hidden;
-    background: linear-gradient(
-        145deg,
-        rgba(28,37,86,.78),
-        rgba(14,19,54,.72)
-    );
-    border: 1px solid rgba(163,180,255,.18);
-    border-radius: 25px;
-    padding: 21px 19px;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    box-shadow:
-        0 20px 55px rgba(0,0,0,.28),
-        inset 0 1px rgba(255,255,255,.08);
-    animation: rise .8s both;
-}
-
-.card::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: 12%;
-    width: 76%;
-    height: 1px;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        var(--cyan),
-        var(--purple),
-        transparent
-    );
-    box-shadow: 0 0 14px var(--cyan);
-}
-
-@keyframes rise {
-    from {
-        opacity: 0;
-        transform: translateY(18px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* خوش‌آمدگویی */
-
-.welcome {
-    display: flex;
-    align-items: center;
-    gap: 13px;
-}
-
-.avatar {
-    flex: 0 0 48px;
-    width: 48px;
-    height: 48px;
-    border-radius: 16px;
-    display: grid;
-    place-items: center;
-    background: linear-gradient(
-        135deg,
-        rgba(86,230,255,.18),
-        rgba(167,139,250,.2)
-    );
-    border: 1px solid rgba(131,221,255,.22);
-    font-size: 24px;
-}
-
-.welcome h2 {
-    font-size: 16px;
-    margin: 0 0 3px;
-    font-weight: 800;
-}
-
-.welcome p {
-    font-size: 12px;
-    color: var(--muted);
-    margin: 0;
-}
-
-.id {
-    margin-right: auto;
-    color: #8eeaff;
-    font-size: 10px;
-    direction: ltr;
-    white-space: nowrap;
-}
-
-/* عنوان بخش‌ها */
-
-.section-title {
-    font-size: 13px;
-    color: #dce5ff;
-    font-weight: 800;
-    margin: 22px 0 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.section-title::after {
-    content: "";
-    height: 1px;
-    flex: 1;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(148,169,255,.25)
-    );
-}
-
-/* تصاویر */
-
-.asset-icon {
-    width: 34px;
-    height: 34px;
-    object-fit: contain;
-    display: block;
-    flex-shrink: 0;
-}
-
-.feature .asset-icon {
-    width: 42px;
-    height: 42px;
-    margin: 0 auto 7px;
-}
-
-.link .asset-icon {
-    width: 40px;
-    height: 40px;
-    padding: 3px;
-    border-radius: 13px;
-    background: rgba(99,205,255,.1);
-    border: 1px solid rgba(116,218,255,.15);
-}
-
-/* امکانات */
-
-.features {
-    display: grid;
-    grid-template-columns: repeat(3,1fr);
-    gap: 9px;
-}
-
-.feature {
-    min-width: 0;
-    text-align: center;
-    padding: 14px 5px 12px;
-    border-radius: 17px;
-    background: rgba(255,255,255,.045);
-    border: 1px solid rgba(167,190,255,.12);
-    transition: .25s;
-}
-
-.feature:active {
-    transform: scale(.96);
-}
-
-.feature b {
-    font-size: 11px;
-    display: block;
-}
-
-.feature small {
-    font-size: 9px;
-    color: #aab7e1;
-    display: block;
-    margin-top: 3px;
-}
-
-/* لینک‌ها */
-
-.links {
-    display: grid;
-    gap: 10px;
-}
-
-.link {
-    position: relative;
-    isolation: isolate;
-    overflow: hidden;
-    text-decoration: none;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 13px 14px;
-    border-radius: 16px;
-    background: linear-gradient(
-        100deg,
-        rgba(83,112,202,.17),
-        rgba(255,255,255,.045)
-    );
-    border: 1px solid rgba(152,190,255,.17);
-    transition: transform .2s,border-color .2s,background .2s;
-}
-
-.link::before {
-    content: "";
-    position: absolute;
-    z-index: -1;
-    top: -80%;
-    bottom: -80%;
-    right: -45%;
-    width: 30%;
-    transform: rotate(20deg);
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255,255,255,.14),
-        transparent
-    );
-    transition: right .7s;
-}
-
-.link:active {
-    transform: scale(.975);
-    border-color: rgba(104,224,255,.55);
-}
-
-.link:active::before {
-    right: 130%;
-}
-
-.link-text {
-    min-width: 0;
-    flex: 1;
-}
-
-.link-text b {
-    display: block;
-    font-size: 13px;
-}
-
-.link-text small {
-    display: block;
-    font-size: 10px;
-    color: #aab7e1;
-    margin-top: 2px;
-}
-
-.arrow {
-    font-size: 18px;
-    color: #9ceaff;
-}
-
-.primary {
-    background: linear-gradient(
-        105deg,
-        rgba(37,160,207,.25),
-        rgba(126,91,218,.23)
-    );
-    border-color: rgba(111,219,255,.32);
-    box-shadow: 0 8px 24px rgba(31,148,204,.1);
-}
-
-/* سکه‌های شناور */
-
-.coin {
-    position: fixed;
-    z-index: 0;
-    pointer-events: none;
-    font-size: 22px;
-    opacity: .17;
-    filter: drop-shadow(0 0 8px rgba(255,210,80,.4));
-    animation: drift var(--d) ease-in-out infinite alternate;
-}
-
-@keyframes drift {
-    to {
-        transform: translate3d(var(--x),-35px,0) rotate(28deg);
-    }
-}
-
-.footer {
-    text-align: center;
-    color: #8492c0;
-    font-size: 10px;
-    margin: 18px 0 0;
-}
-
-.footer span {
-    color: #b6c4ef;
-}
-
-/* پیام کوچک */
-
-.toast {
-    position: fixed;
-    z-index: 9;
-    bottom: calc(18px + env(safe-area-inset-bottom));
-    left: 50%;
-    transform: translate(-50%,20px);
-    opacity: 0;
-    pointer-events: none;
-    background: rgba(14,22,55,.94);
-    border: 1px solid rgba(112,224,255,.3);
-    border-radius: 30px;
-    padding: 9px 16px;
-    font-size: 11px;
-    box-shadow: 0 8px 30px #0006;
-    transition: .3s;
-}
-
-.toast.show {
-    opacity: 1;
-    transform: translate(-50%,0);
-}
-
-@media(min-width:600px) {
-    .wrap {
-        padding-top: 38px;
-    }
-
-    .hero {
-        padding-top: 22px;
-    }
-
-    .card {
-        padding: 25px;
-    }
-}
-
-@media(prefers-reduced-motion:reduce) {
-    *,
-    *::before,
-    *::after {
-        animation-duration: .01ms !important;
-        animation-iteration-count: 1 !important;
-        scroll-behavior: auto !important;
-        transition: none !important;
-    }
-}
+:root{--bg:#080b22;--glass:rgba(19,25,62,.62);--line:rgba(163,180,255,.18);--cyan:#56e6ff;--purple:#a78bfa;--gold:#ffd76a;--muted:#aab4dc}
+*{box-sizing:border-box}html{min-height:100%;background:var(--bg)}body{margin:0;min-height:100vh;color:#fff;font-family:"Vazirmatn",Tahoma,sans-serif;background:radial-gradient(ellipse at 12% 8%,rgba(76,64,190,.34),transparent 34%),radial-gradient(ellipse at 90% 24%,rgba(0,185,218,.2),transparent 30%),linear-gradient(145deg,#080b22,#11143a 52%,#090d27);overflow-x:hidden}
+body:before,body:after{content:"";position:fixed;inset:-30%;pointer-events:none;z-index:0;background:conic-gradient(from 0deg,transparent,rgba(83,225,255,.07),transparent,rgba(167,139,250,.08),transparent);animation:nebula 28s linear infinite;animation-delay:0s}body:after{animation-duration:42s;animation-direction:reverse;filter:blur(34px)}
+/* مکث ۳ ثانیه‌ای بعد از هر دور ۹ ثانیه‌ای (۶s حرکت + ۳s مکث) */
+@keyframes nebula{0%{transform:rotate(0) scale(1)}66%{transform:rotate(360deg) scale(1.1)}100%{transform:rotate(360deg) scale(1.1)}}
+#stars{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}.star{position:absolute;width:3px;height:3px;border-radius:50%;background:#d8faff;box-shadow:0 0 10px 2px #72dfff;opacity:.5;animation:twinkle var(--t) ease-in-out infinite alternate;animation-delay:var(--d)}@keyframes twinkle{0%{opacity:.5;transform:scale(1)}75%{opacity:.08;transform:scale(.45)}100%{opacity:.08;transform:scale(.45)}}
+.orbit{position:absolute;width:290px;height:290px;border:1px solid rgba(107,220,255,.15);border-radius:50%;top:22px;left:50%;transform:translateX(-50%);animation:orbit 24s linear infinite}@keyframes orbit{0%{transform:translateX(-50%) rotate(0)}75%{transform:translateX(-50%) rotate(360deg)}100%{transform:translateX(-50%) rotate(360deg)}}.orbit:before,.orbit:after{content:"";position:absolute;width:9px;height:9px;border-radius:50%;background:var(--cyan);box-shadow:0 0 18px var(--cyan);top:35px;left:24px}.orbit:after{width:6px;height:6px;background:var(--gold);box-shadow:0 0 16px var(--gold);top:auto;left:auto;right:10px;bottom:68px}
+.wrap{position:relative;z-index:1;width:min(100% - 28px,510px);margin:0 auto;padding:calc(26px + env(safe-area-inset-top)) 0 calc(28px + env(safe-area-inset-bottom))}
+.topline{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}.brand-mini{font-size:12px;letter-spacing:1.4px;color:#b6c4ef;font-weight:800}.live{display:flex;align-items:center;gap:7px;border:1px solid rgba(82,255,187,.24);background:rgba(42,220,145,.08);padding:6px 11px;border-radius:30px;color:#8affc7;font-size:11px}.live i{width:7px;height:7px;background:#55f4a7;border-radius:50%;box-shadow:0 0 12px #55f4a7;animation:pulse 1.4s infinite}@keyframes pulse{50%{opacity:.35;box-shadow:0 0 2px #55f4a7}}
+.hero{text-align:center;position:relative;padding:12px 0 24px}.logo-wrap{width:150px;height:150px;margin:0 auto 18px;position:relative;display:grid;place-items:center}.logo-halo{position:absolute;inset:9px;border-radius:38px;background:linear-gradient(135deg,rgba(86,230,255,.23),rgba(167,139,250,.23));filter:blur(18px);animation:halo 6s ease-in-out infinite alternate}@keyframes halo{0%{transform:scale(1);opacity:.75}50%{transform:scale(1.18);opacity:.65}66%{transform:scale(1.18);opacity:.65}100%{transform:scale(1);opacity:.75}}.logo{width:116px;height:116px;display:grid;place-items:center;border-radius:34px;background:linear-gradient(145deg,rgba(42,57,119,.9),rgba(16,23,62,.95));border:1px solid rgba(170,220,255,.34);box-shadow:inset 0 1px 1px rgba(255,255,255,.25),0 18px 50px rgba(0,0,0,.42),0 0 34px rgba(74,207,255,.2);position:relative;animation:levitate 7s ease-in-out infinite;overflow:hidden}.logo img{width:88px;height:88px;object-fit:contain;filter:drop-shadow(0 4px 12px rgba(0,0,0,.4))}@keyframes levitate{0%{transform:translateY(0) rotate(0)}40%{transform:translateY(-9px) rotate(2deg)}57%{transform:translateY(-9px) rotate(2deg)}85%{transform:translateY(0) rotate(0)}100%{transform:translateY(0) rotate(0)}}.logo:after{content:"";position:absolute;inset:-8px;border:1px solid rgba(108,225,255,.25);border-radius:39px;transform:rotate(12deg);pointer-events:none}
+h1{font-size:clamp(27px,7vw,36px);font-weight:900;margin:0;line-height:1.5;background:linear-gradient(90deg,#fff 5%,#8beaff 45%,#c3a9ff 85%,#fff);background-size:220% auto;color:transparent;background-clip:text;-webkit-background-clip:text;animation:shine 8s linear infinite}@keyframes shine{0%{background-position:0 center}75%{background-position:220% center}100%{background-position:220% center}}.subtitle{margin:5px 0 0;color:#b9c5ed;font-size:13px}
+.card{position:relative;overflow:hidden;background:linear-gradient(145deg,rgba(28,37,86,.78),rgba(14,19,54,.72));border:1px solid var(--line);border-radius:25px;padding:21px 19px;backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);box-shadow:0 20px 55px rgba(0,0,0,.28),inset 0 1px rgba(255,255,255,.08);animation:rise .8s both}.card:before{content:"";position:absolute;top:0;right:12%;width:76%;height:1px;background:linear-gradient(90deg,transparent,var(--cyan),var(--purple),transparent);box-shadow:0 0 14px var(--cyan)}
+@keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.welcome{display:flex;align-items:center;gap:13px}.avatar{flex:0 0 48px;width:48px;height:48px;border-radius:16px;display:grid;place-items:center;background:linear-gradient(135deg,rgba(86,230,255,.18),rgba(167,139,250,.2));border:1px solid rgba(131,221,255,.22);font-size:24px;overflow:hidden}.avatar img{width:32px;height:32px;object-fit:contain}.welcome h2{font-size:16px;margin:0 0 3px;font-weight:800}.welcome p{font-size:12px;color:var(--muted);margin:0}.id{margin-right:auto;color:#8eeaff;font-size:10px;direction:ltr;white-space:nowrap}
+.section-title{font-size:13px;color:#dce5ff;font-weight:800;margin:22px 0 12px;display:flex;align-items:center;gap:8px}.section-title:after{content:"";height:1px;flex:1;background:linear-gradient(90deg,transparent,rgba(148,169,255,.25))}
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.feature{min-width:0;text-align:center;padding:14px 5px 12px;border-radius:17px;background:rgba(255,255,255,.045);border:1px solid rgba(167,190,255,.12);transition:.25s}.feature:active{transform:scale(.96)}.feature .emoji{display:block;margin:0 auto 7px;width:40px;height:40px;object-fit:contain;filter:drop-shadow(0 4px 8px rgba(0,0,0,.25))}.feature b{font-size:11px;display:block}.feature small{font-size:9px;color:#aab7e1;display:block;margin-top:3px}
+.links{display:grid;gap:10px}.link{--c:#6ce6ff;position:relative;isolation:isolate;overflow:hidden;text-decoration:none;color:#fff;display:flex;align-items:center;gap:12px;padding:13px 14px;border-radius:16px;background:linear-gradient(100deg,rgba(83,112,202,.17),rgba(255,255,255,.045));border:1px solid rgba(152,190,255,.17);transition:transform .2s,border-color .2s,background .2s}.link:before{content:"";position:absolute;z-index:-1;top:-80%;bottom:-80%;right:-45%;width:30%;transform:rotate(20deg);background:linear-gradient(90deg,transparent,rgba(255,255,255,.14),transparent);transition:right .7s}.link:active{transform:scale(.975);border-color:rgba(104,224,255,.55)}.link:active:before{right:130%}.link-icon{width:40px;height:40px;flex:0 0 40px;border-radius:13px;display:grid;place-items:center;background:rgba(99,205,255,.1);border:1px solid rgba(116,218,255,.15);overflow:hidden}.link-icon img{width:30px;height:30px;object-fit:contain}.link-text{min-width:0;flex:1}.link-text b{display:block;font-size:13px}.link-text small{display:block;font-size:10px;color:#aab7e1;margin-top:2px}.arrow{font-size:18px;color:#9ceaff}.primary{background:linear-gradient(105deg,rgba(37,160,207,.25),rgba(126,91,218,.23));border-color:rgba(111,219,255,.32);box-shadow:0 8px 24px rgba(31,148,204,.1)}
+.footer{text-align:center;color:#8492c0;font-size:10px;margin:18px 0 0}.footer span{color:#b6c4ef}.footer a{color:#8eeaff;text-decoration:none}.footer a:hover{text-decoration:underline}
+.coin{position:fixed;z-index:0;pointer-events:none;width:24px;height:24px;opacity:.20;filter:drop-shadow(0 0 8px rgba(255,210,80,.4));animation:drift var(--d) ease-in-out infinite alternate;animation-delay:var(--delay,0s)}.coin img{width:100%;height:100%;object-fit:contain}@keyframes drift{0%{transform:translate3d(0,0,0) rotate(0)}80%{transform:translate3d(var(--x),-35px,0) rotate(28deg)}100%{transform:translate3d(var(--x),-35px,0) rotate(28deg)}}
+.toast{position:fixed;z-index:9;bottom:calc(18px + env(safe-area-inset-bottom));left:50%;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:rgba(14,22,55,.94);border:1px solid rgba(112,224,255,.3);border-radius:30px;padding:9px 16px;font-size:11px;box-shadow:0 8px 30px #0006;transition:.3s}.toast.show{opacity:1;transform:translate(-50%,0)}
+@media(min-width:600px){.wrap{padding-top:38px}.hero{padding-top:22px}.card{padding:25px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 </style>
 </head>
-
 <body>
-
 <div id="stars"></div>
-
-<div class="coin" style="top:20%;right:7%;--d:5s;--x:13px">🪙</div>
-<div class="coin" style="top:53%;left:5%;--d:6s;--x:-12px">✨</div>
-<div class="coin" style="top:78%;right:9%;--d:7s;--x:10px">💎</div>
-
+<div class="coin" style="top:20%;right:7%;--d:6s;--x:13px;--delay:0s"><img src="🪙.gif" alt="coin"></div>
+<div class="coin" style="top:53%;left:5%;--d:7s;--x:-12px;--delay:2s"><img src="🎯.gif" alt="target"></div>
+<div class="coin" style="top:78%;right:9%;--d:8s;--x:10px;--delay:4s"><img src="🎁.png" alt="gift"></div>
 <main class="wrap">
-
-    <div class="topline">
-        <div class="brand-mini">LIFE SIMULATOR · BALE</div>
-        <div class="live">
-            <i></i>
-            دنیای بازی فعاله
-        </div>
+  <div class="topline"><div class="brand-mini">LIFE SIMULATOR · BALE</div><div class="live"><i></i> دنیای بازی فعاله</div></div>
+  <header class="hero">
+    <div class="orbit"></div>
+    <div class="logo-wrap">
+      <div class="logo-halo"></div>
+      <div class="logo"><img src="🎮️.png.gif" alt="بازی"></div>
     </div>
-
-    <header class="hero">
-
-        <div class="orbit"></div>
-
-        <div class="logo-wrap">
-            <div class="logo-halo"></div>
-
-            <div class="logo">
-                <img
-                    src="https://raw.githubusercontent.com/fazelrahimi6470/Bale.github.io/main/assets/%F0%9F%8E%AE%EF%B8%8F.png.gif"
-                    alt="دسته بازی"
-                >
-            </div>
-        </div>
-
-        <h1>شبیه‌ساز زندگی</h1>
-        <p class="subtitle">
-            زندگی کن، پیشرفت کن، رقابت کن! 🚀
-        </p>
-
-    </header>
-
-    <section class="card">
-
-        <div class="welcome">
-
-            <div class="avatar">👋</div>
-
-            <div>
-                <h2 id="welcome-title">
-                    خوش اومدی به دنیای بازی!
-                </h2>
-
-                <p id="welcome-subtitle">
-                    برای شروع ماجراجویی آماده‌ای؟
-                </p>
-            </div>
-
-            <div class="id" id="user-id"></div>
-
-        </div>
-
-        <div class="section-title">
-            ⭐ دنیای بازی چه خبره؟
-        </div>
-
-        <div class="features">
-
-            <div class="feature">
-                <img
-                    class="asset-icon"
-                    src="https://raw.githubusercontent.com/fazelrahimi6470/Bale.github.io/main/assets/%F0%9F%AA%99.gif"
-                    alt="سکه"
-                >
-                <b>اقتصاد و پول</b>
-                <small>کسب درآمد و خرید</small>
-            </div>
-
-            <div class="feature">
-                <img
-                    class="asset-icon"
-                    src="https://raw.githubusercontent.com/fazelrahimi6470/Bale.github.io/main/assets/%F0%9F%8F%86.gif"
-                    alt="جام"
-                >
-                <b>چالش و رقابت</b>
-                <small>رقابت با بازیکن‌ها</small>
-            </div>
-
-            <div class="feature">
-                <img
-                    class="asset-icon"
-                    src="https://raw.githubusercontent.com/fazelrahimi6470/Bale.github.io/main/assets/%F0%9F%8E%81.png"
-                    alt="هدیه"
-                >
-                <b>جایزه و هدیه</b>
-                <small>پاداش‌های جذاب</small>
-            </div>
-
-        </div>
-
-        <div class="section-title">
-            🚀 وارد بخش موردنظرت شو
-        </div>
-
-        <nav class="links">
-
-            <a
-                class="link primary"
-                href="https://ble.ir/Shabihsaz_zendegi_bot"
-                target="_blank"
-                rel="noopener"
-            >
-                <img
-                    class="asset-icon"
-                    src="https://raw.githubusercontent.com/fazelrahimi6470/Bale.github.io/main/assets/%F0%9F%8E%AE%EF%B8%8F.png.gif"
-                    alt="بازی"
-                >
-
-                <span class="link-text">
-                    <b>ورود به ربات شبیه‌ساز زندگی</b>
-                    <small>شروع بازی و ساخت زندگی مجازی</small>
-                </span>
-
-                <span class="arrow">‹</span>
-            </a>
-
-            <a
-                class="link"
-                href="https://ble.ir/channel_Shabihsaz_zendegi"
-                target="_blank"
-                rel="noopener"
-            >
-                <img
-                    class="asset-icon"
-                    src="https://raw.githubusercontent.com/fazelrahimi6470/Bale.github.io/main/assets/%F0%9F%93%A2.png"
-                    alt="اطلاع‌رسانی"
-                >
-
-                <span class="link-text">
-                    <b>کانال اصلی</b>
-                    <small>خبرها و اطلاعیه‌های بازی</small>
-                </span>
-
-                <span class="arrow">‹</span>
-            </a>
-
-            <a
-                class="link"
-                href="https://ble.ir/Activities_zendegi"
-                target="_blank"
-                rel="noopener"
-            >
-                <img
-                    class="asset-icon"
-                    src="https://raw.githubusercontent.com/fazelrahimi6470/Bale.github.io/main/assets/%F0%9F%8E%AF.gif"
-                    alt="رویدادها"
-                >
-
-                <span class="link-text">
-                    <b>کانال رویدادها</b>
-                    <small>چالش‌ها و اتفاق‌های ویژه</small>
-                </span>
-
-                <span class="arrow">‹</span>
-            </a>
-
-            <a
-                class="link"
-                href="https://ble.ir/Group_shabihsaz_zendegi"
-                target="_blank"
-                rel="noopener"
-            >
-                <img
-                    class="asset-icon"
-                    src="https://raw.githubusercontent.com/fazelrahimi6470/Bale.github.io/main/assets/%F0%9F%91%A5.gif"
-                    alt="گروه"
-                >
-
-                <span class="link-text">
-                    <b>گروه بازیکنان</b>
-                    <small>گفت‌وگو با بقیه بازیکن‌ها</small>
-                </span>
-
-                <span class="arrow">‹</span>
-            </a>
-
-            <a
-                class="link"
-                href="https://ble.ir/fazellrahimii"
-                target="_blank"
-                rel="noopener"
-            >
-                <img
-                    class="asset-icon"
-                    src="https://raw.githubusercontent.com/fazelrahimi6470/Bale.github.io/main/assets/%F0%9F%9B%A0%EF%B8%8F.png"
-                    alt="ابزارها"
-                >
-
-                <span class="link-text">
-                    <b>ارتباط با سازنده</b>
-                    <small>پیشنهادها و پشتیبانی</small>
-                </span>
-
-                <span class="arrow">‹</span>
-            </a>
-
-        </nav>
-
-    </section>
-
-    <p class="footer">
-        ساخته‌شده برای
-        <span>شبیه‌ساز زندگی</span>
-        · هر روز، یک ماجراجویی تازه ✨
-    </p>
-
+    <h1>شبیه‌ساز زندگی</h1>
+    <p class="subtitle">زندگی کن، پیشرفت کن، رقابت کن! 🚀</p>
+  </header>
+  <section class="card">
+    <div class="welcome">
+      <div class="avatar"><img src="🏆.gif" alt="رتبه"></div>
+      <div><h2 id="welcome-title">خوش اومدی به دنیای بازی!</h2><p id="welcome-subtitle">برای شروع ماجراجویی آماده‌ای؟</p></div>
+      <div class="id" id="user-id"></div>
+    </div>
+    <div class="section-title">⭐ دنیای بازی چه خبره؟</div>
+    <div class="features">
+      <div class="feature"><img class="emoji" src="🪙.gif" alt="اقتصاد"><b>اقتصاد و پول</b><small>کسب درآمد و خرید</small></div>
+      <div class="feature"><img class="emoji" src="🏆.gif" alt="چالش"><b>چالش و رقابت</b><small>رقابت با بازیکن‌ها</small></div>
+      <div class="feature"><img class="emoji" src="🎁.png" alt="جایزه"><b>جایزه و هدیه</b><small>پاداش‌های جذاب</small></div>
+    </div>
+    <div class="section-title">🚀 وارد بخش موردنظرت شو</div>
+    <nav class="links">
+      <a class="link primary" href="https://ble.ir/Shabihsaz_zendegi_bot" target="_blank" rel="noopener">
+        <span class="link-icon"><img src="🎮️.png.gif" alt="ربات"></span>
+        <span class="link-text"><b>ورود به ربات شبیه‌ساز زندگی</b><small>شروع بازی و ساخت زندگی مجازی</small></span>
+        <span class="arrow">‹</span>
+      </a>
+      <a class="link" href="https://ble.ir/channel_Shabihsaz_zendegi" target="_blank" rel="noopener">
+        <span class="link-icon"><img src="📢.png" alt="کانال"></span>
+        <span class="link-text"><b>کانال اصلی</b><small>خبرها و اطلاعیه‌های بازی</small></span>
+        <span class="arrow">‹</span>
+      </a>
+      <a class="link" href="https://ble.ir/Activities_zendegi" target="_blank" rel="noopener">
+        <span class="link-icon"><img src="🎯.gif" alt="رویداد"></span>
+        <span class="link-text"><b>کانال رویدادها</b><small>چالش‌ها و اتفاق‌های ویژه</small></span>
+        <span class="arrow">‹</span>
+      </a>
+      <a class="link" href="https://ble.ir/Group_shabihsaz_zendegi" target="_blank" rel="noopener">
+        <span class="link-icon"><img src="👥.gif" alt="گروه"></span>
+        <span class="link-text"><b>گروه بازیکنان</b><small>گفت‌وگو با بقیه بازیکن‌ها</small></span>
+        <span class="arrow">‹</span>
+      </a>
+      <a class="link" href="https://ble.ir/fazellrahimii" target="_blank" rel="noopener">
+        <span class="link-icon"><img src="🛠️.png" alt="پشتیبانی"></span>
+        <span class="link-text"><b>ارتباط با سازنده</b><small>پیشنهادها و پشتیبانی</small></span>
+        <span class="arrow">‹</span>
+      </a>
+      <a class="link" href="mailto:shabihsaz.zendegi@gmail.com" rel="noopener">
+        <span class="link-icon"><img src="📢.png" alt="ایمیل"></span>
+        <span class="link-text"><b>ایمیل سازنده</b><small>shabihsaz.zendegi@gmail.com</small></span>
+        <span class="arrow">‹</span>
+      </a>
+    </nav>
+  </section>
+  <p class="footer">ساخته‌شده برای <span>شبیه‌ساز زندگی</span> · هر روز، یک ماجراجویی تازه ✨<br><a href="mailto:shabihsaz.zendegi@gmail.com">shabihsaz.zendegi@gmail.com</a></p>
 </main>
-
-<div class="toast" id="toast">
-    ✨ خوش اومدی!
-</div>
-
+<div class="toast" id="toast">✨ خوش اومدی!</div>
 <script>
-(function() {
-
-    /* ساخت ستاره‌های متحرک */
-
-    const stars = document.getElementById("stars");
-
+(function(){
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const stars = document.getElementById('stars');
+  if (stars && !reduceMotion) {
     for (let i = 0; i < 46; i++) {
-
-        const star = document.createElement("i");
-
-        star.className = "star";
-
-        star.style.left = Math.random() * 100 + "%";
-        star.style.top = Math.random() * 100 + "%";
-
-        star.style.setProperty(
-            "--t",
-            (2 + Math.random() * 4) + "s"
-        );
-
-        star.style.animationDelay =
-            (-Math.random() * 5) + "s";
-
-        stars.appendChild(star);
+      const s = document.createElement('i');
+      s.className = 'star';
+      s.style.left = Math.random() * 100 + '%';
+      s.style.top = Math.random() * 100 + '%';
+      s.style.setProperty('--t', (2 + Math.random() * 4) + 's');
+      s.style.setProperty('--d', (-Math.random() * 5) + 's');
+      s.style.animationDelay = (-Math.random() * 5) + 's';
+      stars.appendChild(s);
     }
-
-    /* دریافت اطلاعات کاربر بله */
-
-    function setUser(user) {
-
-        if (!user) return;
-
-        const name =
-            user.first_name ||
-            user.firstName ||
-            user.name;
-
-        if (name) {
-
-            document.getElementById("welcome-title")
-                .textContent = "خوش اومدی، " + name + "! 👋";
-        }
-
-        const id = user.id || user.user_id;
-
-        if (id) {
-
-            document.getElementById("user-id")
-                .textContent = "ID: " + id;
-        }
-
-        document.getElementById("welcome-subtitle")
-            .textContent = "آماده‌ای زندگی مجازیت رو بسازی؟ 🚀";
+  }
+  function setUser(user) {
+    if (!user) return;
+    const name = user.first_name || user.firstName || user.name;
+    if (name) document.getElementById('welcome-title').textContent = 'خوش اومدی، ' + name + '! 👋';
+    const id = user.id || user.user_id;
+    if (id) document.getElementById('user-id').textContent = 'ID: ' + id;
+    document.getElementById('welcome-subtitle').textContent = 'آماده‌ای زندگی مجازیت رو بسازی؟ 🚀';
+  }
+  try {
+    const app = window.Bale && window.Bale.WebApp;
+    if (app) {
+      if (typeof app.ready === 'function') app.ready();
+      if (typeof app.expand === 'function') app.expand();
+      const user = app.initDataUnsafe && app.initDataUnsafe.user;
+      setUser(user);
     }
-
-    try {
-
-        const app =
-            window.Bale && window.Bale.WebApp;
-
-        if (app) {
-
-            if (typeof app.ready === "function") {
-                app.ready();
-            }
-
-            if (typeof app.expand === "function") {
-                app.expand();
-            }
-
-            const user =
-                app.initDataUnsafe &&
-                app.initDataUnsafe.user;
-
-            setUser(user);
-        }
-
-    } catch (e) {
-
-        console.log("Bale Mini App init:", e);
-    }
-
-    /* افکت لمس لینک‌ها */
-
-    document.querySelectorAll(".link").forEach(function(link) {
-
-        link.addEventListener("click", function() {
-
-            const toast = document.getElementById("toast");
-
-            toast.classList.add("show");
-
-            setTimeout(function() {
-                toast.classList.remove("show");
-            }, 1100);
-
-        });
-
-    });
-
+  } catch (e) { console.log('Bale Mini App init:', e); }
+  document.querySelectorAll('.link').forEach(a => a.addEventListener('click', () => {
+    const t = document.getElementById('toast');
+    if (!t) return;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 1100);
+  }));
 })();
 </script>
-
 </body>
 </html>
