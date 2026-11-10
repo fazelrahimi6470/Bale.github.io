@@ -1,280 +1,633 @@
-
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#080d1c">
-<title>ربات شبیه‌ساز زندگی</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#080b22">
+<title>شبیه‌ساز زندگی | Life Simulator</title>
 
-<link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.0.3/Vazirmatn-font-face.css" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+<script src="https://tapi.bale.ai/miniapp.js"></script>
 
 <style>
+:root {
+    --bg: #080b22;
+    --cyan: #56e6ff;
+    --purple: #a78bfa;
+    --muted: #aab4dc;
+}
+
 * {
     box-sizing: border-box;
+}
+
+html {
+    min-height: 100%;
+    background: var(--bg);
 }
 
 body {
     margin: 0;
     min-height: 100vh;
-    padding: 25px 15px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: 'Vazirmatn', sans-serif;
     color: #fff;
+    font-family: "Vazirmatn", Tahoma, sans-serif;
     background:
-        radial-gradient(circle at 15% 15%, #123b69 0, transparent 35%),
-        radial-gradient(circle at 85% 85%, #3b1769 0, transparent 35%),
-        #080d1c;
+        radial-gradient(ellipse at 12% 8%, rgba(76,64,190,.34), transparent 34%),
+        radial-gradient(ellipse at 90% 24%, rgba(0,185,218,.2), transparent 30%),
+        linear-gradient(145deg,#080b22,#11143a 52%,#090d27);
     overflow-x: hidden;
 }
 
-/* نورهای پس‌زمینه */
 body::before,
 body::after {
     content: "";
     position: fixed;
-    width: 230px;
-    height: 230px;
-    border-radius: 50%;
-    filter: blur(90px);
-    opacity: .35;
-    z-index: -1;
-    animation: float 8s ease-in-out infinite alternate;
-}
-
-body::before {
-    background: #0ea5e9;
-    top: 5%;
-    right: -90px;
+    inset: -30%;
+    pointer-events: none;
+    z-index: 0;
+    background: conic-gradient(
+        from 0deg,
+        transparent,
+        rgba(83,225,255,.07),
+        transparent,
+        rgba(167,139,250,.08),
+        transparent
+    );
+    animation: nebula 28s linear infinite;
 }
 
 body::after {
-    background: #9333ea;
-    bottom: 5%;
-    left: -90px;
-    animation-delay: 2s;
+    animation-duration: 42s;
+    animation-direction: reverse;
+    filter: blur(34px);
 }
 
-@keyframes float {
-    from { transform: translateY(-20px); }
-    to { transform: translateY(35px); }
-}
-
-.container {
-    width: 100%;
-    max-width: 430px;
-    padding: 25px 20px;
-    border-radius: 26px;
-    background: rgba(15, 23, 42, .78);
-    border: 1px solid rgba(148, 163, 184, .2);
-    box-shadow: 0 20px 70px rgba(0,0,0,.45);
-    backdrop-filter: blur(18px);
-    animation: appear .8s ease both;
-}
-
-@keyframes appear {
-    from {
-        opacity: 0;
-        transform: translateY(25px) scale(.97);
-    }
+@keyframes nebula {
     to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
+        transform: rotate(360deg) scale(1.1);
+    }
+}
+
+#stars {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.star {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: #d8faff;
+    box-shadow: 0 0 10px 2px #72dfff;
+    opacity: .5;
+    animation: twinkle var(--t) ease-in-out infinite alternate;
+}
+
+@keyframes twinkle {
+    to {
+        opacity: .08;
+        transform: scale(.45);
+    }
+}
+
+.wrap {
+    position: relative;
+    z-index: 1;
+    width: min(100% - 28px, 510px);
+    margin: 0 auto;
+    padding: calc(26px + env(safe-area-inset-top)) 0 calc(28px + env(safe-area-inset-bottom));
+}
+
+.topline {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.brand-mini {
+    font-size: 12px;
+    letter-spacing: 1.4px;
+    color: #b6c4ef;
+    font-weight: 800;
+}
+
+.live {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    border: 1px solid rgba(82,255,187,.24);
+    background: rgba(42,220,145,.08);
+    padding: 6px 11px;
+    border-radius: 30px;
+    color: #8affc7;
+    font-size: 11px;
+}
+
+.live i {
+    width: 7px;
+    height: 7px;
+    background: #55f4a7;
+    border-radius: 50%;
+    box-shadow: 0 0 12px #55f4a7;
+    animation: pulse 1.4s infinite;
+}
+
+@keyframes pulse {
+    50% {
+        opacity: .35;
+        box-shadow: 0 0 2px #55f4a7;
+    }
+}
+
+/* لوگوی اصلی */
+
+.hero {
+    text-align: center;
+    position: relative;
+    padding: 12px 0 24px;
+}
+
+.orbit {
+    position: absolute;
+    width: 290px;
+    height: 290px;
+    border: 1px solid rgba(107,220,255,.15);
+    border-radius: 50%;
+    top: 22px;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: orbit 18s linear infinite;
+}
+
+.orbit::before,
+.orbit::after {
+    content: "";
+    position: absolute;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--cyan);
+    box-shadow: 0 0 18px var(--cyan);
+    top: 35px;
+    left: 24px;
+}
+
+.orbit::after {
+    width: 6px;
+    height: 6px;
+    background: #ffd76a;
+    box-shadow: 0 0 16px #ffd76a;
+    top: auto;
+    left: auto;
+    right: 10px;
+    bottom: 68px;
+}
+
+@keyframes orbit {
+    to {
+        transform: translateX(-50%) rotate(360deg);
+    }
+}
+
+.logo-wrap {
+    width: 150px;
+    height: 150px;
+    margin: 0 auto 18px;
+    position: relative;
+    display: grid;
+    place-items: center;
+}
+
+.logo-halo {
+    position: absolute;
+    inset: 9px;
+    border-radius: 38px;
+    background: linear-gradient(
+        135deg,
+        rgba(86,230,255,.23),
+        rgba(167,139,250,.23)
+    );
+    filter: blur(18px);
+    animation: halo 3s ease-in-out infinite alternate;
+}
+
+@keyframes halo {
+    to {
+        transform: scale(1.18);
+        opacity: .65;
     }
 }
 
 .logo {
-    width: 82px;
-    height: 82px;
-    margin: 0 auto 15px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 40px;
-    border-radius: 25px;
-    background: linear-gradient(135deg, #2563eb, #9333ea);
-    box-shadow: 0 0 35px rgba(59,130,246,.4);
-    animation: pulse 3s infinite;
+    width: 116px;
+    height: 116px;
+    display: grid;
+    place-items: center;
+    border-radius: 34px;
+    background: linear-gradient(145deg,rgba(42,57,119,.9),rgba(16,23,62,.95));
+    border: 1px solid rgba(170,220,255,.34);
+    box-shadow:
+        inset 0 1px 1px rgba(255,255,255,.25),
+        0 18px 50px rgba(0,0,0,.42),
+        0 0 34px rgba(74,207,255,.2);
+    position: relative;
+    animation: levitate 4s ease-in-out infinite;
+    overflow: hidden;
 }
 
-@keyframes pulse {
-    50% { box-shadow: 0 0 45px rgba(147,51,234,.65); }
+.logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    padding: 3px;
+    display: block;
+}
+
+.logo::after {
+    content: "";
+    position: absolute;
+    inset: -8px;
+    border: 1px solid rgba(108,225,255,.25);
+    border-radius: 39px;
+    transform: rotate(12deg);
+    pointer-events: none;
+}
+
+@keyframes levitate {
+    50% {
+        transform: translateY(-9px) rotate(2deg);
+    }
 }
 
 h1 {
-    margin: 0;
-    font-size: 23px;
+    font-size: clamp(27px,7vw,36px);
     font-weight: 900;
-    text-align: center;
-    background: linear-gradient(90deg, #38bdf8, #c084fc);
-    -webkit-background-clip: text;
-    background-clip: text;
+    margin: 0;
+    line-height: 1.5;
+    background: linear-gradient(90deg,#fff 5%,#8beaff 45%,#c3a9ff 85%,#fff);
+    background-size: 220% auto;
     color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+    animation: shine 5s linear infinite;
+}
+
+@keyframes shine {
+    to {
+        background-position: 220% center;
+    }
 }
 
 .subtitle {
-    text-align: center;
-    color: #94a3b8;
-    font-size: 12px;
-    margin: 8px 0 22px;
-}
-
-/* اطلاعات کاربر */
-.welcome-box {
-    padding: 15px;
-    margin-bottom: 22px;
-    border-radius: 17px;
-    background: linear-gradient(120deg, rgba(14,165,233,.13), rgba(139,92,246,.13));
-    border: 1px solid rgba(56,189,248,.3);
-    text-align: center;
-}
-
-.welcome-user {
-    color: #7dd3fc;
-    font-size: 16px;
-    font-weight: bold;
-}
-
-.user-id {
-    color: #94a3b8;
-    font-size: 11px;
-    margin-top: 6px;
-    direction: ltr;
-    font-family: sans-serif;
-}
-
-/* عنوان لینک‌ها */
-.section-title {
-    color: #cbd5e1;
+    margin: 5px 0 0;
+    color: #b9c5ed;
     font-size: 13px;
-    font-weight: bold;
-    margin: 0 4px 12px;
-    text-align: right;
 }
 
-.btn-group {
-    display: flex;
-    flex-direction: column;
-    gap: 11px;
-}
+/* کارت اصلی */
 
-.btn {
+.card {
     position: relative;
     overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-    padding: 14px 15px;
-    border-radius: 15px;
-    color: white;
-    text-decoration: none;
-    border: 1px solid rgba(255,255,255,.12);
-    transition: .25s ease;
+    background: linear-gradient(
+        145deg,
+        rgba(28,37,86,.78),
+        rgba(14,19,54,.72)
+    );
+    border: 1px solid rgba(163,180,255,.18);
+    border-radius: 25px;
+    padding: 21px 19px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow:
+        0 20px 55px rgba(0,0,0,.28),
+        inset 0 1px rgba(255,255,255,.08);
+    animation: rise .8s both;
 }
 
-.btn::before {
+.card::before {
     content: "";
     position: absolute;
     top: 0;
-    left: -120%;
-    width: 70%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,.16), transparent);
-    transform: skewX(-20deg);
-    transition: .6s;
+    right: 12%;
+    width: 76%;
+    height: 1px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        var(--cyan),
+        var(--purple),
+        transparent
+    );
+    box-shadow: 0 0 14px var(--cyan);
 }
 
-.btn:hover::before {
-    left: 140%;
+@keyframes rise {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-.btn:hover {
-    transform: translateY(-3px);
-    filter: brightness(1.15);
-    box-shadow: 0 8px 25px rgba(0,0,0,.25);
-}
+/* خوش‌آمدگویی */
 
-.btn:active {
-    transform: scale(.97);
-}
-
-.btn-content {
+.welcome {
     display: flex;
     align-items: center;
-    gap: 11px;
-    z-index: 1;
+    gap: 13px;
 }
 
-.btn-icon {
-    width: 38px;
-    height: 38px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 19px;
-    border-radius: 12px;
-    background: rgba(255,255,255,.15);
+.avatar {
+    flex: 0 0 48px;
+    width: 48px;
+    height: 48px;
+    border-radius: 16px;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(
+        135deg,
+        rgba(86,230,255,.18),
+        rgba(167,139,250,.2)
+    );
+    border: 1px solid rgba(131,221,255,.22);
+    font-size: 24px;
 }
 
-.btn-text {
-    font-size: 13px;
-    font-weight: bold;
+.welcome h2 {
+    font-size: 16px;
+    margin: 0 0 3px;
+    font-weight: 800;
 }
 
-.btn-url {
+.welcome p {
+    font-size: 12px;
+    color: var(--muted);
+    margin: 0;
+}
+
+.id {
+    margin-right: auto;
+    color: #8eeaff;
+    font-size: 10px;
     direction: ltr;
-    font-family: sans-serif;
+    white-space: nowrap;
+}
+
+/* عنوان بخش‌ها */
+
+.section-title {
+    font-size: 13px;
+    color: #dce5ff;
+    font-weight: 800;
+    margin: 22px 0 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.section-title::after {
+    content: "";
+    height: 1px;
+    flex: 1;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(148,169,255,.25)
+    );
+}
+
+/* تصاویر */
+
+.asset-icon {
+    width: 34px;
+    height: 34px;
+    object-fit: contain;
+    display: block;
+    flex-shrink: 0;
+}
+
+.feature .asset-icon {
+    width: 42px;
+    height: 42px;
+    margin: 0 auto 7px;
+}
+
+.link .asset-icon {
+    width: 40px;
+    height: 40px;
+    padding: 3px;
+    border-radius: 13px;
+    background: rgba(99,205,255,.1);
+    border: 1px solid rgba(116,218,255,.15);
+}
+
+/* امکانات */
+
+.features {
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 9px;
+}
+
+.feature {
+    min-width: 0;
+    text-align: center;
+    padding: 14px 5px 12px;
+    border-radius: 17px;
+    background: rgba(255,255,255,.045);
+    border: 1px solid rgba(167,190,255,.12);
+    transition: .25s;
+}
+
+.feature:active {
+    transform: scale(.96);
+}
+
+.feature b {
+    font-size: 11px;
+    display: block;
+}
+
+.feature small {
     font-size: 9px;
-    opacity: .75;
-    z-index: 1;
-    text-align: left;
-    overflow-wrap: anywhere;
+    color: #aab7e1;
+    display: block;
+    margin-top: 3px;
 }
 
-.btn-robot {
-    background: linear-gradient(110deg, #1d4ed8, #2563eb);
+/* لینک‌ها */
+
+.links {
+    display: grid;
+    gap: 10px;
 }
 
-.btn-channel {
-    background: linear-gradient(110deg, #0369a1, #0284c7);
+.link {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    text-decoration: none;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 14px;
+    border-radius: 16px;
+    background: linear-gradient(
+        100deg,
+        rgba(83,112,202,.17),
+        rgba(255,255,255,.045)
+    );
+    border: 1px solid rgba(152,190,255,.17);
+    transition: transform .2s,border-color .2s,background .2s;
 }
 
-.btn-events {
-    background: linear-gradient(110deg, #047857, #059669);
+.link::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: -80%;
+    bottom: -80%;
+    right: -45%;
+    width: 30%;
+    transform: rotate(20deg);
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255,255,255,.14),
+        transparent
+    );
+    transition: right .7s;
 }
 
-.btn-group-link {
-    background: linear-gradient(110deg, #6d28d9, #7c3aed);
+.link:active {
+    transform: scale(.975);
+    border-color: rgba(104,224,255,.55);
 }
 
-.btn-creator {
-    background: linear-gradient(110deg, #c2410c, #ea580c);
+.link:active::before {
+    right: 130%;
+}
+
+.link-text {
+    min-width: 0;
+    flex: 1;
+}
+
+.link-text b {
+    display: block;
+    font-size: 13px;
+}
+
+.link-text small {
+    display: block;
+    font-size: 10px;
+    color: #aab7e1;
+    margin-top: 2px;
+}
+
+.arrow {
+    font-size: 18px;
+    color: #9ceaff;
+}
+
+.primary {
+    background: linear-gradient(
+        105deg,
+        rgba(37,160,207,.25),
+        rgba(126,91,218,.23)
+    );
+    border-color: rgba(111,219,255,.32);
+    box-shadow: 0 8px 24px rgba(31,148,204,.1);
+}
+
+/* سکه‌های شناور */
+
+.coin {
+    position: fixed;
+    z-index: 0;
+    pointer-events: none;
+    font-size: 22px;
+    opacity: .17;
+    filter: drop-shadow(0 0 8px rgba(255,210,80,.4));
+    animation: drift var(--d) ease-in-out infinite alternate;
+}
+
+@keyframes drift {
+    to {
+        transform: translate3d(var(--x),-35px,0) rotate(28deg);
+    }
 }
 
 .footer {
     text-align: center;
-    margin-top: 22px;
-    padding-top: 15px;
-    border-top: 1px solid rgba(255,255,255,.08);
-    color: #64748b;
+    color: #8492c0;
     font-size: 10px;
+    margin: 18px 0 0;
 }
 
 .footer span {
-    color: #38bdf8;
+    color: #b6c4ef;
 }
 
-@media (max-width: 360px) {
-    .btn-url {
-        font-size: 8px;
+/* پیام کوچک */
+
+.toast {
+    position: fixed;
+    z-index: 9;
+    bottom: calc(18px + env(safe-area-inset-bottom));
+    left: 50%;
+    transform: translate(-50%,20px);
+    opacity: 0;
+    pointer-events: none;
+    background: rgba(14,22,55,.94);
+    border: 1px solid rgba(112,224,255,.3);
+    border-radius: 30px;
+    padding: 9px 16px;
+    font-size: 11px;
+    box-shadow: 0 8px 30px #0006;
+    transition: .3s;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translate(-50%,0);
+}
+
+@media(min-width:600px) {
+    .wrap {
+        padding-top: 38px;
     }
 
-    .container {
-        padding: 20px 14px;
+    .hero {
+        padding-top: 22px;
+    }
+
+    .card {
+        padding: 25px;
+    }
+}
+
+@media(prefers-reduced-motion:reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition: none !important;
     }
 }
 </style>
@@ -282,119 +635,326 @@ h1 {
 
 <body>
 
-<div class="container">
+<div id="stars"></div>
 
-    <div class="logo">🎮</div>
+<div class="coin" style="top:20%;right:7%;--d:5s;--x:13px">🪙</div>
+<div class="coin" style="top:53%;left:5%;--d:6s;--x:-12px">✨</div>
+<div class="coin" style="top:78%;right:9%;--d:7s;--x:10px">💎</div>
 
-    <h1>شبیه‌ساز زندگی</h1>
-    <div class="subtitle">
-        دنیایی متفاوت از سرگرمی، رقابت و هیجان ✨
-    </div>
+<main class="wrap">
 
-    <div class="welcome-box">
-        <div class="welcome-user" id="user-greeting">
-            در حال دریافت اطلاعات...
+    <div class="topline">
+        <div class="brand-mini">LIFE SIMULATOR · BALE</div>
+        <div class="live">
+            <i></i>
+            دنیای بازی فعاله
         </div>
-        <div class="user-id" id="user-id-display"></div>
     </div>
 
-    <div class="section-title">🚀 دسترسی سریع</div>
+    <header class="hero">
 
-    <div class="btn-group">
+        <div class="orbit"></div>
 
-        <a href="https://ble.ir/Shabihsaz_zendegi_bot"
-           class="btn btn-robot" target="_blank" rel="noopener">
-            <div class="btn-content">
-                <div class="btn-icon">🎮</div>
-                <div class="btn-text">ورود به ربات</div>
+        <div class="logo-wrap">
+            <div class="logo-halo"></div>
+
+            <div class="logo">
+                <img
+                    src="https://raw.githubusercontent.com/fazelrahimi6470/Bale.github.io/main/assets/%F0%9F%8E%AE%EF%B8%8F.png.gif"
+                    alt="دسته بازی"
+                >
             </div>
-            <span class="btn-url">@Shabihsaz_zendegi_bot</span>
-        </a>
+        </div>
 
-        <a href="https://ble.ir/channel_Shabihsaz_zendegi"
-           class="btn btn-channel" target="_blank" rel="noopener">
-            <div class="btn-content">
-                <div class="btn-icon">📢</div>
-                <div class="btn-text">کانال اصلی</div>
+        <h1>شبیه‌ساز زندگی</h1>
+        <p class="subtitle">
+            زندگی کن، پیشرفت کن، رقابت کن! 🚀
+        </p>
+
+    </header>
+
+    <section class="card">
+
+        <div class="welcome">
+
+            <div class="avatar">👋</div>
+
+            <div>
+                <h2 id="welcome-title">
+                    خوش اومدی به دنیای بازی!
+                </h2>
+
+                <p id="welcome-subtitle">
+                    برای شروع ماجراجویی آماده‌ای؟
+                </p>
             </div>
-            <span class="btn-url">@channel_Shabihsaz_zendegi</span>
-        </a>
 
-        <a href="https://ble.ir/Activities_zendegi"
-           class="btn btn-events" target="_blank" rel="noopener">
-            <div class="btn-content">
-                <div class="btn-icon">🏆</div>
-                <div class="btn-text">کانال رویدادها</div>
+            <div class="id" id="user-id"></div>
+
+        </div>
+
+        <div class="section-title">
+            ⭐ دنیای بازی چه خبره؟
+        </div>
+
+        <div class="features">
+
+            <div class="feature">
+                <img
+                    class="asset-icon"
+                    src="https://raw.githubusercontent.com/fazelrahimi6470/Bale.github.io/main/assets/%F0%9F%AA%99.gif"
+                    alt="سکه"
+                >
+                <b>اقتصاد و پول</b>
+                <small>کسب درآمد و خرید</small>
             </div>
-            <span class="btn-url">@Activities_zendegi</span>
-        </a>
 
-        <a href="https://ble.ir/Group_shabihsaz_zendegi"
-           class="btn btn-group-link" target="_blank" rel="noopener">
-            <div class="btn-content">
-                <div class="btn-icon">👥</div>
-                <div class="btn-text">گروه گفتگو</div>
+            <div class="feature">
+                <img
+                    class="asset-icon"
+                    src="https://raw.githubusercontent.com/fazelrahimi6470/Bale.github.io/main/assets/%F0%9F%8F%86.gif"
+                    alt="جام"
+                >
+                <b>چالش و رقابت</b>
+                <small>رقابت با بازیکن‌ها</small>
             </div>
-            <span class="btn-url">@Group_shabihsaz_zendegi</span>
-        </a>
 
-        <a href="https://ble.ir/fazellrahimii"
-           class="btn btn-creator" target="_blank" rel="noopener">
-            <div class="btn-content">
-                <div class="btn-icon">👨‍💻</div>
-                <div class="btn-text">ارتباط با سازنده</div>
+            <div class="feature">
+                <img
+                    class="asset-icon"
+                    src="https://raw.githubusercontent.com/fazelrahimi6470/Bale.github.io/main/assets/%F0%9F%8E%81.png"
+                    alt="هدیه"
+                >
+                <b>جایزه و هدیه</b>
+                <small>پاداش‌های جذاب</small>
             </div>
-            <span class="btn-url">@fazellrahimii</span>
-        </a>
 
-    </div>
+        </div>
 
-    <div class="footer">
-        ساخته شده با ❤️ برای <span>شبیه‌ساز زندگی</span>
-    </div>
+        <div class="section-title">
+            🚀 وارد بخش موردنظرت شو
+        </div>
 
+        <nav class="links">
+
+            <a
+                class="link primary"
+                href="https://ble.ir/Shabihsaz_zendegi_bot"
+                target="_blank"
+                rel="noopener"
+            >
+                <img
+                    class="asset-icon"
+                    src="https://raw.githubusercontent.com/fazelrahimi6470/Bale.github.io/main/assets/%F0%9F%8E%AE%EF%B8%8F.png.gif"
+                    alt="بازی"
+                >
+
+                <span class="link-text">
+                    <b>ورود به ربات شبیه‌ساز زندگی</b>
+                    <small>شروع بازی و ساخت زندگی مجازی</small>
+                </span>
+
+                <span class="arrow">‹</span>
+            </a>
+
+            <a
+                class="link"
+                href="https://ble.ir/channel_Shabihsaz_zendegi"
+                target="_blank"
+                rel="noopener"
+            >
+                <img
+                    class="asset-icon"
+                    src="https://raw.githubusercontent.com/fazelrahimi6470/Bale.github.io/main/assets/%F0%9F%93%A2.png"
+                    alt="اطلاع‌رسانی"
+                >
+
+                <span class="link-text">
+                    <b>کانال اصلی</b>
+                    <small>خبرها و اطلاعیه‌های بازی</small>
+                </span>
+
+                <span class="arrow">‹</span>
+            </a>
+
+            <a
+                class="link"
+                href="https://ble.ir/Activities_zendegi"
+                target="_blank"
+                rel="noopener"
+            >
+                <img
+                    class="asset-icon"
+                    src="https://raw.githubusercontent.com/fazelrahimi6470/Bale.github.io/main/assets/%F0%9F%8E%AF.gif"
+                    alt="رویدادها"
+                >
+
+                <span class="link-text">
+                    <b>کانال رویدادها</b>
+                    <small>چالش‌ها و اتفاق‌های ویژه</small>
+                </span>
+
+                <span class="arrow">‹</span>
+            </a>
+
+            <a
+                class="link"
+                href="https://ble.ir/Group_shabihsaz_zendegi"
+                target="_blank"
+                rel="noopener"
+            >
+                <img
+                    class="asset-icon"
+                    src="https://raw.githubusercontent.com/fazelrahimi6470/Bale.github.io/main/assets/%F0%9F%91%A5.gif"
+                    alt="گروه"
+                >
+
+                <span class="link-text">
+                    <b>گروه بازیکنان</b>
+                    <small>گفت‌وگو با بقیه بازیکن‌ها</small>
+                </span>
+
+                <span class="arrow">‹</span>
+            </a>
+
+            <a
+                class="link"
+                href="https://ble.ir/fazellrahimii"
+                target="_blank"
+                rel="noopener"
+            >
+                <img
+                    class="asset-icon"
+                    src="https://raw.githubusercontent.com/fazelrahimi6470/Bale.github.io/main/assets/%F0%9F%9B%A0%EF%B8%8F.png"
+                    alt="ابزارها"
+                >
+
+                <span class="link-text">
+                    <b>ارتباط با سازنده</b>
+                    <small>پیشنهادها و پشتیبانی</small>
+                </span>
+
+                <span class="arrow">‹</span>
+            </a>
+
+        </nav>
+
+    </section>
+
+    <p class="footer">
+        ساخته‌شده برای
+        <span>شبیه‌ساز زندگی</span>
+        · هر روز، یک ماجراجویی تازه ✨
+    </p>
+
+</main>
+
+<div class="toast" id="toast">
+    ✨ خوش اومدی!
 </div>
 
-<script src="https://tapi.bale.ai/miniapp.js"></script>
-
 <script>
-document.addEventListener('DOMContentLoaded', function() {
+(function() {
 
-    const greetingElement = document.getElementById('user-greeting');
-    const idElement = document.getElementById('user-id-display');
+    /* ساخت ستاره‌های متحرک */
 
-    try {
-        if (
-            window.Bale &&
-            window.Bale.WebApp &&
-            window.Bale.WebApp.initDataUnsafe
-        ) {
-            const user = window.Bale.WebApp.initDataUnsafe.user;
+    const stars = document.getElementById("stars");
 
-            if (user) {
-                greetingElement.textContent = user.first_name
-                    ? `سلام ${user.first_name} عزیز! 👋`
-                    : 'سلام! 👋';
+    for (let i = 0; i < 46; i++) {
 
-                if (user.id) {
-                    idElement.textContent =
-                        `شناسه عددی شما: ${user.id}`;
-                }
-            } else {
-                greetingElement.textContent = 'سلام! 👋';
-            }
-        } else {
-            greetingElement.textContent = 'سلام کاربر عزیز! 👋';
-            idElement.textContent =
-                '(برای مشاهده اطلاعات کاربری، مینی‌اپ را در بله باز کنید)';
-        }
-    } catch (error) {
-        greetingElement.textContent = 'سلام کاربر عزیز! 👋';
-        idElement.textContent = '';
-        console.error('Bale Mini App Error:', error);
+        const star = document.createElement("i");
+
+        star.className = "star";
+
+        star.style.left = Math.random() * 100 + "%";
+        star.style.top = Math.random() * 100 + "%";
+
+        star.style.setProperty(
+            "--t",
+            (2 + Math.random() * 4) + "s"
+        );
+
+        star.style.animationDelay =
+            (-Math.random() * 5) + "s";
+
+        stars.appendChild(star);
     }
 
-});
+    /* دریافت اطلاعات کاربر بله */
+
+    function setUser(user) {
+
+        if (!user) return;
+
+        const name =
+            user.first_name ||
+            user.firstName ||
+            user.name;
+
+        if (name) {
+
+            document.getElementById("welcome-title")
+                .textContent = "خوش اومدی، " + name + "! 👋";
+        }
+
+        const id = user.id || user.user_id;
+
+        if (id) {
+
+            document.getElementById("user-id")
+                .textContent = "ID: " + id;
+        }
+
+        document.getElementById("welcome-subtitle")
+            .textContent = "آماده‌ای زندگی مجازیت رو بسازی؟ 🚀";
+    }
+
+    try {
+
+        const app =
+            window.Bale && window.Bale.WebApp;
+
+        if (app) {
+
+            if (typeof app.ready === "function") {
+                app.ready();
+            }
+
+            if (typeof app.expand === "function") {
+                app.expand();
+            }
+
+            const user =
+                app.initDataUnsafe &&
+                app.initDataUnsafe.user;
+
+            setUser(user);
+        }
+
+    } catch (e) {
+
+        console.log("Bale Mini App init:", e);
+    }
+
+    /* افکت لمس لینک‌ها */
+
+    document.querySelectorAll(".link").forEach(function(link) {
+
+        link.addEventListener("click", function() {
+
+            const toast = document.getElementById("toast");
+
+            toast.classList.add("show");
+
+            setTimeout(function() {
+                toast.classList.remove("show");
+            }, 1100);
+
+        });
+
+    });
+
+})();
 </script>
 
 </body>
